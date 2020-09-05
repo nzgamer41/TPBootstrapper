@@ -18,6 +18,7 @@ using Path = System.IO.Path;
 using System.IO.Compression;
 using FileMode = System.IO.FileMode;
 using System.Runtime.InteropServices;
+using AutoUpdaterDotNET;
 
 namespace TPBootstrapper
 {
@@ -90,6 +91,8 @@ namespace TPBootstrapper
         {
             Logging.WriteLine("Checking for new TP Installer version...");
             //TODO: use autoupdater .net thing later
+            //https://github.com/nzgamer41/TPBootstrapper/releases/latest/download/autoupdate.xml
+            AutoUpdater.Start("https://github.com/nzgamer41/TPBootstrapper/releases/latest/download/autoupdate.xml");
         }
 
         private async void checkForCores()
