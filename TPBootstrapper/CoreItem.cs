@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -22,6 +23,7 @@ namespace TPBootstrapper
         public bool isInstalled = false;
         public bool needsUpdate = false;
         public bool isRequired = false;
+        public bool isRedist = false;
         //download variables need to be nonserialized as we don't want to save these to the cache
         [NonSerialized] private LogHelper Logging;
         [NonSerialized] private ProgressBar _pb;
@@ -30,6 +32,12 @@ namespace TPBootstrapper
 
         public override string ToString()
         {
+            if (isRedist)
+            {
+                string valret = name + " " + version + " [DEPENDENCY, STRONGLY RECOMMENDED!]";
+                return valret;
+            }
+
             string retVal;
             retVal = name + " v" + version + " ";
 
@@ -116,9 +124,75 @@ namespace TPBootstrapper
             else
             {
                 Logging.WriteLine("File downloaded, extracting..");
-                handleExtraction();
+                if (!isRedist)
+                {
+                    handleExtraction();
+                }
+                else
+                {
+                    handleInstall();
+                }
             }
 
+        }
+        /// <summary>
+        /// Starts a process given a file name (for VC redists)
+        /// </summary>
+        async void runProcess(string filename, Process p, ProcessStartInfo si)
+        {
+            p = new Process();
+            si = new ProcessStartInfo();
+            si.FileName = filename;
+            if (filename.Contains("2005"))
+            {
+                si.Arguments = "/q";
+            }
+            else if (filename.Contains("2008"))
+            {
+                si.Arguments = "/qb";
+            }
+            else
+            {
+                si.Arguments = "/passive /norestart";
+            }
+            p.StartInfo = si;
+            p.Start();
+            //await Task.Run(() => p.WaitForExit());
+            p.WaitForExit();
+        }
+
+        private async void handleInstall()
+        {
+            Process p = new Process();
+            ProcessStartInfo si = new ProcessStartInfo();
+            if (name.Contains("DirectX"))
+            {
+                si.FileName = _downloadDir + "\\dxwebsetup.exe";
+                si.Arguments = "/Q";
+                p.StartInfo = si;
+                p.Start();
+                await Task.Run(() => p.WaitForExit());
+                File.Delete(_downloadDir + "\\dxwebsetup.exe");
+            }
+            else
+            {
+                //AAAAAA
+                ZipFile.ExtractToDirectory(_downloadDir + "\\vcr.zip", _downloadDir + "\\vcr");
+                runProcess(_downloadDir + "\\vcr\\vcredist2005_x86.exe", p, si);
+                runProcess(_downloadDir + "\\vcr\\vcredist2005_x64.exe", p, si);
+                runProcess(_downloadDir + "\\vcr\\vcredist2008_x86.exe", p, si);
+                runProcess(_downloadDir + "\\vcr\\vcredist2008_x64.exe", p, si);
+                runProcess(_downloadDir + "\\vcr\\vcredist2010_x86.exe", p, si);
+                runProcess(_downloadDir + "\\vcr\\vcredist2010_x64.exe", p, si);
+                runProcess(_downloadDir + "\\vcr\\vcredist2012_x86.exe", p, si);
+                runProcess(_downloadDir + "\\vcr\\vcredist2012_x64.exe", p, si);
+                runProcess(_downloadDir + "\\vcr\\vcredist2013_x86.exe", p, si);
+                runProcess(_downloadDir + "\\vcr\\vcredist2013_x64.exe", p, si);
+                runProcess(_downloadDir + "\\vcr\\vcredist2015_2017_2019_x86.exe", p, si);
+                runProcess(_downloadDir + "\\vcr\\vcredist2015_2017_2019_x64.exe", p, si);
+                File.Delete(_downloadDir + "\\vcr.zip");
+                Directory.Delete(_downloadDir + "\\vcr", true);
+            }
         }
 
         private async void handleExtraction()

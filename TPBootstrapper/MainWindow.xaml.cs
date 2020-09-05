@@ -48,6 +48,8 @@ namespace TPBootstrapper
             checkForInstallUpdate();
             
             checkForCores();
+
+            addRedists();
         }
         //Creating the extern function...  
         [DllImport("wininet.dll")]
@@ -60,13 +62,12 @@ namespace TPBootstrapper
             return InternetGetConnectedState(out Desc, 0);
         }
         // 
-        private void initSetup()
+        private async void initSetup()
         {
             if (File.Exists(downloadDir + "\\tpcache.dat"))
             {
                 cacheCoreList = ReadFromBinaryFile<List<CoreItem>>(downloadDir + "\\tpcache.dat");
             }
-
             if (cacheCoreList.Count > 0 && coreList.Count > 0)
             {
                 foreach (CoreItem c in coreList)
@@ -93,6 +94,37 @@ namespace TPBootstrapper
             //TODO: use autoupdater .net thing later
             //https://github.com/nzgamer41/TPBootstrapper/releases/latest/download/autoupdate.xml
             AutoUpdater.Start("https://github.com/nzgamer41/TPBootstrapper/releases/latest/download/autoupdate.xml");
+        }
+
+        private async void addRedists()
+        {
+            CoreItem directX = new CoreItem();
+            directX.dlLink = "https://download.microsoft.com/download/1/7/1/1718CCC4-6315-4D8E-9543-8E28A4E18C4C/dxwebsetup.exe";
+            directX.isRedist = true;
+            directX.name = "DirectX Runtimes";
+            directX.version = "9.0";
+            CoreItem vcr = new CoreItem();
+            vcr.dlLink = "http://nzgamer41.win/TeknoParrot/TPRedists/vcr.zip";
+            vcr.isRedist = true;
+            vcr.name = "Visual C++ Redistributibles (2005-2019)";
+            vcr.version = "N/A";
+            coreList.Add(directX);
+            coreList.Add(vcr);
+            ProgressBar pbdx = new ProgressBar();
+            ListBoxItem lbdx = new ListBoxItem();
+            pbdx.Height = 16;
+            lbdx.Content = pbdx;
+            pbList.Add(pbdx);
+            listBoxCoresDl.Items.Add(lbdx);
+            listBoxCores.Items.Add(directX.ToString());
+            ProgressBar pbvc = new ProgressBar();
+            ListBoxItem lbvc = new ListBoxItem();
+            pbvc.Height = 16;
+            lbvc.Content = pbvc;
+            pbList.Add(pbvc);
+            listBoxCoresDl.Items.Add(lbvc);
+            listBoxCores.Items.Add(vcr.ToString());
+
         }
 
         private async void checkForCores()
