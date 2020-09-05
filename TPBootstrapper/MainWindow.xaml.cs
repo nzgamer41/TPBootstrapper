@@ -17,6 +17,7 @@ using Application = System.Windows.Application;
 using Path = System.IO.Path;
 using System.IO.Compression;
 using FileMode = System.IO.FileMode;
+using System.Runtime.InteropServices;
 
 namespace TPBootstrapper
 {
@@ -27,7 +28,7 @@ namespace TPBootstrapper
     {
         public LogHelper Logging = new LogHelper(true);
         private int selected = 0;
-        string[] listOfComponents = {"TeknoParrotUi","OpenSegaAPI","TeknoParrot","TeknoParrotN2","OpenParrotWin32","OpenParrotx64", "SegaToolsTP"};
+        string[] listOfComponents = {"TeknoParrotUi","OpenSegaAPI","TeknoParrot","TeknoParrotN2","OpenParrotWin32","OpenParrotx64", "SegaToolsTP", "OpenSndGaelco", "OpenSndVoyager"};
         private string downloadDir = Directory.GetCurrentDirectory();
         List<CoreItem> coreList = new List<CoreItem>();
         public List<CoreItem> cacheCoreList = new List<CoreItem>();
@@ -38,9 +39,24 @@ namespace TPBootstrapper
         {
             InitializeComponent();
 
+            if (!checkInternetConnection())
+            {
+                MessageBox.Show("Sorry, but this app requires an active internet connection to work.","No internet detected!");
+            }
+
             checkForInstallUpdate();
             
             checkForCores();
+        }
+        //Creating the extern function...  
+        [DllImport("wininet.dll")]
+        private extern static bool InternetGetConnectedState(out int Description, int ReservedValue);
+        //Creating a function that uses the API function...  
+
+        private bool checkInternetConnection()
+        {
+            int Desc;
+            return InternetGetConnectedState(out Desc, 0);
         }
         // 
         private void initSetup()

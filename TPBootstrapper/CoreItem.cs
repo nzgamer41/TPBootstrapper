@@ -147,6 +147,14 @@ namespace TPBootstrapper
                                     isUsingFolderOverride = true;
                                     folderOverride = "TeknoParrot";
                                     break;
+                                case "OpenSndGaelco":
+                                    isUsingFolderOverride = true;
+                                    folderOverride = "TeknoParrot";
+                                    break;
+                                case "OpenSndVoyager":
+                                    isUsingFolderOverride = true;
+                                    folderOverride = "TeknoParrot";
+                                    break;
                                 case "TeknoParrotN2":
                                     isUsingFolderOverride = true;
                                     folderOverride = "N2";
