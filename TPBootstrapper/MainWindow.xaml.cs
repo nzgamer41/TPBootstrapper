@@ -140,7 +140,7 @@ namespace TPBootstrapper
                     ProgressBar pb = new ProgressBar();
                     ListBoxItem lb = new ListBoxItem();
                     pb.Height = 16;
-                    lb.Content = pb;
+                    lb.Content = pb;    
                     pbList.Add(pb);
                     listBoxCoresDl.Items.Add(lb);
                     listBoxCores.Items.Add(temp.ToString());
@@ -167,7 +167,14 @@ namespace TPBootstrapper
 
         private void buttonDlSelected_Click(object sender, RoutedEventArgs e)
         {
-            coreList[listBoxCores.SelectedIndex].handleDownload(Logging, pbList[listBoxCores.SelectedIndex], downloadDir);
+            if (listBoxCores.SelectedIndex > 0)
+            {
+                coreList[listBoxCores.SelectedIndex].handleDownload(Logging, pbList[listBoxCores.SelectedIndex], downloadDir);
+            }
+            else
+            {
+                MessageBox.Show("Please select a core to download, or click Full Install to download all cores and redists.");
+            }
         }
 
         private void listBoxCores_SelectionChanged(object sender, SelectionChangedEventArgs e)

@@ -27,7 +27,13 @@
         <ListBox x:Name="listBoxCores" Margin="10,1,0,2" Grid.Row="3" Grid.Column="1" SelectionChanged="listBoxCores_SelectionChanged"></ListBox>
         <Label Content="Cores available:" Grid.Column="1" Margin="6,1,0,1" Grid.Row="2" HorizontalAlignment="Left" Width="92"/>
         <Button x:Name="buttonDlSelected" Content="Download Selected" Grid.Column="2" Margin="242,3,5,0" Grid.Row="4" VerticalAlignment="Top" Height="23" IsEnabled="False" Click="buttonDlSelected_Click"/>
-        <ListBox x:Name="listBoxCoresDl" HorizontalContentAlignment="Stretch" Margin="0,1,11,2" Grid.Row="3" Grid.Column="2" SelectionChanged="listBoxCores_SelectionChanged"></ListBox>
+        <ListBox x:Name="listBoxCoresDl" HorizontalContentAlignment="Stretch" Margin="0,1,11,2" Grid.Row="3" Grid.Column="2" SelectionChanged="listBoxCores_SelectionChanged">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="{x:Type ListBoxItem}">
+                    <Setter Property="Focusable" Value="False"/>
+                </Style>
+            </ListBox.ItemContainerStyle>
+        </ListBox>
         <Button x:Name="buttonFullInstall" Content="Full Install" Grid.Column="2" Margin="92,3,155,0" Grid.Row="4" VerticalAlignment="Top" Height="23" IsEnabled="False" Click="buttonFullInstall_Click"/>
     </Grid>
 </Window>
