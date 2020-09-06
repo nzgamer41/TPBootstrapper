@@ -173,25 +173,33 @@ namespace TPBootstrapper
                 p.Start();
                 await Task.Run(() => p.WaitForExit());
                 File.Delete(_downloadDir + "\\dxwebsetup.exe");
+                Logging.WriteLine("DirectX Installed!");
+                isInstalled = true;
             }
             else
             {
                 //AAAAAA
+                if(Directory.Exists(_downloadDir + "\\vcr"))
+                {
+                    Directory.Delete(_downloadDir + "\\vcr", true);
+                }
                 ZipFile.ExtractToDirectory(_downloadDir + "\\vcr.zip", _downloadDir + "\\vcr");
-                runProcess(_downloadDir + "\\vcr\\vcredist2005_x86.exe", p, si);
-                runProcess(_downloadDir + "\\vcr\\vcredist2005_x64.exe", p, si);
-                runProcess(_downloadDir + "\\vcr\\vcredist2008_x86.exe", p, si);
-                runProcess(_downloadDir + "\\vcr\\vcredist2008_x64.exe", p, si);
-                runProcess(_downloadDir + "\\vcr\\vcredist2010_x86.exe", p, si);
-                runProcess(_downloadDir + "\\vcr\\vcredist2010_x64.exe", p, si);
-                runProcess(_downloadDir + "\\vcr\\vcredist2012_x86.exe", p, si);
-                runProcess(_downloadDir + "\\vcr\\vcredist2012_x64.exe", p, si);
-                runProcess(_downloadDir + "\\vcr\\vcredist2013_x86.exe", p, si);
-                runProcess(_downloadDir + "\\vcr\\vcredist2013_x64.exe", p, si);
-                runProcess(_downloadDir + "\\vcr\\vcredist2015_2017_2019_x86.exe", p, si);
-                runProcess(_downloadDir + "\\vcr\\vcredist2015_2017_2019_x64.exe", p, si);
+                await Task.Run(() => runProcess(_downloadDir + "\\vcr\\vcredist2005_x86.exe", p, si));
+                await Task.Run(() => runProcess(_downloadDir + "\\vcr\\vcredist2005_x64.exe", p, si));
+                await Task.Run(() => runProcess(_downloadDir + "\\vcr\\vcredist2008_x86.exe", p, si));
+                await Task.Run(() => runProcess(_downloadDir + "\\vcr\\vcredist2008_x64.exe", p, si));
+                await Task.Run(() => runProcess(_downloadDir + "\\vcr\\vcredist2010_x86.exe", p, si));
+                await Task.Run(() => runProcess(_downloadDir + "\\vcr\\vcredist2010_x64.exe", p, si));
+                await Task.Run(() => runProcess(_downloadDir + "\\vcr\\vcredist2012_x86.exe", p, si));
+                await Task.Run(() => runProcess(_downloadDir + "\\vcr\\vcredist2012_x64.exe", p, si));
+                await Task.Run(() => runProcess(_downloadDir + "\\vcr\\vcredist2013_x86.exe", p, si));
+                await Task.Run(() => runProcess(_downloadDir + "\\vcr\\vcredist2013_x64.exe", p, si));
+                await Task.Run(() => runProcess(_downloadDir + "\\vcr\\vcredist2015_2017_2019_x86.exe", p, si));
+                await Task.Run(() => runProcess(_downloadDir + "\\vcr\\vcredist2015_2017_2019_x64.exe", p, si));
                 File.Delete(_downloadDir + "\\vcr.zip");
                 Directory.Delete(_downloadDir + "\\vcr", true);
+                Logging.WriteLine("VC redists installed!");
+                isInstalled = true;
             }
         }
 

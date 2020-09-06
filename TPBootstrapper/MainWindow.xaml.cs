@@ -19,6 +19,7 @@ using System.IO.Compression;
 using FileMode = System.IO.FileMode;
 using System.Runtime.InteropServices;
 using AutoUpdaterDotNET;
+using System.Diagnostics;
 
 namespace TPBootstrapper
 {
@@ -44,9 +45,9 @@ namespace TPBootstrapper
             {
                 MessageBox.Show("Sorry, but this app requires an active internet connection to work.","No internet detected!");
             }
-
+#if !DEBUG
             checkForInstallUpdate();
-            
+#endif  
             checkForCores();
 
             addRedists();
@@ -351,6 +352,34 @@ namespace TPBootstrapper
             {
                 coreList[i].handleDownload(Logging, pbList[i], downloadDir);
             }
+            bool isDone = false;
+            new Thread(() =>
+            {
+                Thread.CurrentThread.IsBackground = true;
+                /* run your code here */
+                while (!isDone)
+                {
+                    foreach (CoreItem c in coreList)
+                    {
+                        if (c.isInstalled)
+                        {
+                            isDone = true;
+                            continue;
+                        }
+                        else
+                        {
+                            isDone = false;
+                            break;
+                        }
+                    }
+                }
+                MessageBox.Show("TeknoParrot has downloaded successfully!", "Download complete");
+                this.Dispatcher.Invoke(() =>
+                {
+                    Process.Start(downloadDir + ".\\TeknoParrotUi.exe");
+                    this.Close();
+                });
+            }).Start();
         }
     }
 }
