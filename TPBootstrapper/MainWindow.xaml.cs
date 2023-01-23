@@ -20,6 +20,7 @@ using FileMode = System.IO.FileMode;
 using System.Runtime.InteropServices;
 using AutoUpdaterDotNET;
 using System.Diagnostics;
+using System.Dynamic;
 
 namespace TPBootstrapper
 {
@@ -28,7 +29,7 @@ namespace TPBootstrapper
     /// </summary>
     public partial class MainWindow : Window
     {
-        public LogHelper Logging = new LogHelper(true);
+        public static LogHelper Logging = new LogHelper(true);
         private int selected = 0;
         string[] listOfComponents = {"TeknoParrotUi","OpenSegaAPI","TeknoParrot","TeknoParrotN2","OpenParrotWin32","OpenParrotx64", "SegaToolsTP", "OpenSndGaelco", "OpenSndVoyager"};
         private string downloadDir = Directory.GetCurrentDirectory();
@@ -136,14 +137,21 @@ namespace TPBootstrapper
                 foreach (string s in listOfComponents)
                 {
                     CoreItem temp = await Check(s);
-                    coreList.Add(temp);
+                    if (temp.name != null)
+                    {
+                        coreList.Add(temp);
+                    }
+
                     ProgressBar pb = new ProgressBar();
                     ListBoxItem lb = new ListBoxItem();
                     pb.Height = 16;
-                    lb.Content = pb;    
-                    pbList.Add(pb);
-                    listBoxCoresDl.Items.Add(lb);
-                    listBoxCores.Items.Add(temp.ToString());
+                    lb.Content = pb;
+                    if (temp.name != null)
+                    {
+                        pbList.Add(pb);
+                        listBoxCoresDl.Items.Add(lb);
+                        listBoxCores.Items.Add(temp.ToString());
+                    }
                 }
             }
             catch (Octokit.RateLimitExceededException ex)
@@ -268,10 +276,13 @@ namespace TPBootstrapper
                         var latest = releases[i];
                         if (latest.TagName == "TeknoParrot")
                         {
-                            temp.dlLink = latest.Assets[0].BrowserDownloadUrl;
-                            var match = Regex.Match(latest.Name, versionPattern);
-                            temp.version = match.Groups[0].Value;
-                            return temp;
+                            if (latest.Assets.Count > 0)
+                            {
+                                temp.dlLink = latest.Assets[0].BrowserDownloadUrl;
+                                var match = Regex.Match(latest.Name, versionPattern);
+                                temp.version = match.Groups[0].Value;
+                                return temp;
+                            }
                         }
                     }
                 }
@@ -296,7 +307,8 @@ namespace TPBootstrapper
 
             }
 
-            throw new Exception("Checking for new versions failed!");
+            Logging.WriteLine("Checking for a new version failed!");
+            return new CoreItem();
         }
 
         private void buttonBrowse_Click(object sender, RoutedEventArgs e)
