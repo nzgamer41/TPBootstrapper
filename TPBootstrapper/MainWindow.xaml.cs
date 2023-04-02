@@ -31,7 +31,7 @@ namespace TPBootstrapper
     {
         public static LogHelper Logging = new LogHelper(true);
         private int selected = 0;
-        string[] listOfComponents = {"TeknoParrotUi","OpenSegaAPI","TeknoParrot","TeknoParrotN2","OpenParrotWin32","OpenParrotx64", "SegaToolsTP", "OpenSndGaelco", "OpenSndVoyager"};
+        string[] listOfComponents = {"TeknoParrotUi","OpenSegaAPI","TeknoParrot","TeknoParrotN2","OpenParrotWin32","OpenParrotx64", "OpenSndGaelco", "OpenSndVoyager"};
         private string downloadDir = Directory.GetCurrentDirectory();
         List<CoreItem> coreList = new List<CoreItem>();
         public List<CoreItem> cacheCoreList = new List<CoreItem>();
@@ -105,13 +105,13 @@ namespace TPBootstrapper
             directX.isRedist = true;
             directX.name = "DirectX Runtimes";
             directX.version = "9.0";
-            CoreItem vcr = new CoreItem();
-            vcr.dlLink = "http://nzgamer41.win/TeknoParrot/TPRedists/vcr.zip";
-            vcr.isRedist = true;
-            vcr.name = "Visual C++ Redistributibles (2005-2019)";
-            vcr.version = "N/A";
+            //CoreItem vcr = new CoreItem();
+            //vcr.dlLink = "http://nzgamer41.win/TeknoParrot/TPRedists/vcr.zip";
+            //vcr.isRedist = true;
+            //vcr.name = "Visual C++ Redistributibles (2005-2019)";
+            //vcr.version = "N/A";
             coreList.Add(directX);
-            coreList.Add(vcr);
+            //coreList.Add(vcr);
             ProgressBar pbdx = new ProgressBar();
             ListBoxItem lbdx = new ListBoxItem();
             pbdx.Height = 16;
@@ -119,13 +119,13 @@ namespace TPBootstrapper
             pbList.Add(pbdx);
             listBoxCoresDl.Items.Add(lbdx);
             listBoxCores.Items.Add(directX.ToString());
-            ProgressBar pbvc = new ProgressBar();
-            ListBoxItem lbvc = new ListBoxItem();
-            pbvc.Height = 16;
-            lbvc.Content = pbvc;
-            pbList.Add(pbvc);
-            listBoxCoresDl.Items.Add(lbvc);
-            listBoxCores.Items.Add(vcr.ToString());
+            //ProgressBar pbvc = new ProgressBar();
+            //ListBoxItem lbvc = new ListBoxItem();
+            //pbvc.Height = 16;
+            //lbvc.Content = pbvc;
+            //pbList.Add(pbvc);
+            //listBoxCoresDl.Items.Add(lbvc);
+            //listBoxCores.Items.Add(vcr.ToString());
 
         }
 
