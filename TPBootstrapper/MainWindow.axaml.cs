@@ -25,7 +25,7 @@ namespace TPBootstrapper
         private readonly string[] _components;
         private readonly string CacheFile;
         private string downloadDir = Directory.GetCurrentDirectory();
-        private string tokens = "?client_id=Ov23livUHjCHB2WJMos2&client_secret=32b12d3750b8fb2479886879697dbf9a760ab1b6";
+
 
         public MainWindow()
         {
@@ -33,8 +33,6 @@ namespace TPBootstrapper
             CoresListBox.ItemsSource = _cores;
             CacheFile = Path.Combine(Directory.GetCurrentDirectory(), "tpcache.json");
             _httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("TPBootstrapper/1.0 (compat)");
-            var byteArray = new UTF8Encoding().GetBytes("Ov23livUHjCHB2WJMos2:32b12d3750b8fb2479886879697dbf9a760ab1b6");
-            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
             InstallDirTextBox.Text = downloadDir;
             // populate components from UpdaterRegistry
             _components = UpdaterRegistry.components.Select(c => c.name).ToArray();
@@ -64,7 +62,7 @@ namespace TPBootstrapper
         {
             try
             {
-                using var resp = await _httpClient.GetAsync("https://api.github.com/" + tokens, HttpCompletionOption.ResponseHeadersRead);
+                using var resp = await _httpClient.GetAsync("https://api.github.com/", HttpCompletionOption.ResponseHeadersRead);
                 return resp.IsSuccessStatusCode;
             }
             catch
@@ -168,7 +166,7 @@ namespace TPBootstrapper
             try
             {
                 // 1) Get full releases list and prefer the release whose tag_name exactly matches the component name.
-                var releasesUrl = $"https://api.github.com/repos/{owner}/{repo}/releases" + tokens;
+                var releasesUrl = $"https://api.github.com/repos/{owner}/{repo}/releases";
                 var resp = await _httpClient.GetAsync(releasesUrl);
                 if (!resp.IsSuccessStatusCode)
                     return null;
@@ -207,7 +205,7 @@ namespace TPBootstrapper
                 }
 
                 // 2) No matching-tag release — try the releases/latest endpoint
-                var latestUrl = $"https://api.github.com/repos/{owner}/{repo}/releases/latest" + tokens;
+                var latestUrl = $"https://api.github.com/repos/{owner}/{repo}/releases/latest";
                 resp = await _httpClient.GetAsync(latestUrl);
                 if (resp.IsSuccessStatusCode)
                 {
