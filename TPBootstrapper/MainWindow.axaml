@@ -1,0 +1,35 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="TPBootstrapper.MainWindow"
+        Title="TP Bootstrapper" Width="700" Height="420"
+        CanResize="False"
+        MinWidth="700" MaxWidth="700"
+        MinHeight="420" MaxHeight="420">
+  <StackPanel Margin="10" Spacing="8">
+    <TextBlock Text="TeknoParrot Web Installer" FontWeight="Bold" FontSize="16"/>
+    <StackPanel Orientation="Horizontal" Spacing="8">
+      <TextBox Name="InstallDirTextBox" Width="420" IsReadOnly="True"/>
+      <Button Name="BrowseBtn" Content="Browse..." Width="100" Click="BrowseBtn_Click"/>
+      <Button Name="RefreshBtn" Content="Refresh Cores" Width="120" Click="RefreshBtn_Click"/>
+    </StackPanel>
+
+    <Grid ColumnDefinitions="2*,1*" RowDefinitions="Auto,Auto,*">
+      <TextBlock Grid.Column="0" Text="Cores:" FontWeight="Bold" Margin="0,6,0,4"/>
+      <TextBlock Grid.Column="1" Text="Progress" FontWeight="Bold" Margin="7,6,0,4"/>
+      <!-- make the listbox scrollable by enabling the ScrollViewer and capping height -->
+      <ListBox Name="CoresListBox"
+               Grid.Row="2"
+               Grid.Column="0"
+               MinHeight="300"
+               MaxHeight="300"
+               ScrollViewer.VerticalScrollBarVisibility="Auto"
+               SelectionChanged="CoresListBox_SelectionChanged"/>
+      <StackPanel Grid.Row="2" Grid.Column="1" Spacing="6">
+        <ProgressBar Name="SelectedProgress" Height="18" Minimum="0" Maximum="100"/>
+        <Button Name="DownloadSelectedBtn" Content="Download Selected" Click="DownloadSelectedBtn_Click"/>
+        <Button Name="FullInstallBtn" Content="Full Install (Download All)" Click="FullInstallBtn_Click"/>
+        <TextBlock Name="StatusText" Text="" TextWrapping="Wrap"/>
+      </StackPanel>
+    </Grid>
+  </StackPanel>
+</Window>
